@@ -20,12 +20,12 @@ router.get('/', [isLoggedIn, isPersona], async(req, res) => {;
     trabajos = await pool.query('SELECT * FROM trabajos WHERE trabajos.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
 
     if (filter.length === 0 && trabajos.length !== 0) {
-        delete trabajos;
-        trabajos = await pool.query('SELECT * FROM WHERE trabajos.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
+        //delete trabajos;
+        //trabajos = await pool.query('SELECT * FROM WHERE trabajos.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
         res.render('persona/perfilP', { trabajos });
 
     } else if (trabajos.length !== filter.length) {
-        delete trabajos;
+        //delete trabajos;
         trabajos = await pool.query('SELECT * FROM filter WHERE filter.estado = 1 and filter.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
         res.render('persona/perfilP', { trabajos });
 

@@ -4,7 +4,7 @@
     "description": "PetsWork 3.0",
     "main": "index.js",
     "scripts": {
-        "start": "node /src/index.js",
+        "start": "npm /src/index.js",
         "dev": "nodemon src/"
     },
     "keywords": [],

@@ -31,7 +31,7 @@ passport.use('local.signup', new LocalStrategy({
     const cod = req.body.codigo;
     const tamano = cod.length;
 
-    if (tamano == 8) {
+    if (tamano == 8 || tamano == 9) {
         const {
             nombre,
             apellido,

@@ -12,19 +12,24 @@ router.get('/', [isLoggedIn, isPersona], async(req, res) => {;
 
     const DBfilter = await pool.query('SELECT * FROM trabajos');
 
-    for (i = 0; i < DBfilter.length; i++) {
-        await pool.query('UPDATE trabajos set diferencia = (timestampdiff(day, ? ,current_timestamp)) WHERE trabajos.id = ?', [DBfilter[i].created_at, DBfilter[i].id]);
+    if (DBfilter !== 0) {
+        for (i = 0; i < DBfilter.length; i++) {
+            await pool.query('UPDATE trabajos set diferencia = (timestampdiff(day, ? ,current_timestamp)) WHERE trabajos.id = ?', [DBfilter[i].created_at, DBfilter[i].id]);
+        }
     }
-
     filter = await pool.query('SELECT * FROM filter');
-    trabajos = await pool.query('SELECT * FROM trabajos WHERE trabajos.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
+    trabajos = await pool.query('SELECT * FROM trabajos');
 
     if (filter.length === 0 && trabajos.length !== 0) {
-        // delete trabajos;
-        // trabajos = await pool.query('SELECT * FROM WHERE trabajos.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
+        delete trabajos;
+        trabajos = await pool.query('SELECT * FROM trabajos WHERE trabajos.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
+        const DBfilter = await pool.query("SELECT * FROM trabajos");
+        for (i = 0; i < DBfilter.length; i++) {
+            await pool.query('INSERT INTO filter set ?', [DBfilter[i]]);
+        }
         res.render('persona/perfilP', { trabajos });
 
-    } else if (trabajos.length !== filter.length) {
+    } else if (trabajos.length >= filter.length) {
         //delete trabajos;
         trabajos = await pool.query('SELECT * FROM filter WHERE filter.estado = 1 and filter.diferencia <= 31 ORDER BY created_at DESC LIMIT ?,?', [contador, contardor10]);
         res.render('persona/perfilP', { trabajos });

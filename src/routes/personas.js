@@ -166,9 +166,10 @@ router.get('/atraz', [isLoggedIn, isPersona], async(req, res) => {;
 //Postular Trabajo
 router.get('/filtro/:id', [isLoggedIn, isPersona], async(req, res) => {;
     const { id } = req.params;
+    const { id_persona } = req.user;
     const trabajos = await pool.query('SELECT * FROM filter WHERE filter.estado = 1 and filter.diferencia <= 7 ORDER BY created_at DESC LIMIT 0,6');
     const avisoP = await pool.query('select filter.id, filter.descripcion, filter.empresa_name, filter.puesto, filter.pais,filter.cate, filter.rango, filter.created_at, filter.diferencia, estado.estados as estado from filter inner join estado on filter.estado = estado.id  WHERE filter.id = ? and estado = 1 and filter.diferencia <= 7 ORDER BY created_at DESC LIMIT 0,6', [id]);
-    const Postula = await pool.query('select estadoP.estados as estado from postulantes inner join estadoP on postulantes.estado = estadoP.id where trabajo_id = ?', [id]);
+    const Postula = await pool.query('select *,estadoP.estados as estado from postulantes inner join estadoP on postulantes.estado = estadoP.id where trabajo_id = ? and id_persona = ?', [id, id_persona]);
     res.render('persona/filtroT', { trabajos, aviso: avisoP[0], postula: Postula[0] });
 });
 
